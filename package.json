@@ -28,6 +28,7 @@
     "bin",
     "lib",
     "src",
+    "mongodb",
     "package.json",
     "LICENSE",
     "README.md"
