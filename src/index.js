@@ -1,10 +1,12 @@
-import { exec, spawn } from 'child_process';
-import path from 'path';
-import fs from 'fs-extra';
-import request from 'request';
-import yargs from 'yargs';
+const { exec, spawn } = require('child_process');
+const path = require('path');
+const fs = require('fs-extra');
+const request = require('request');
+const yargs = require('yargs');
+const os = require('os');
+const inquirer = require('inquirer');
 
-export default async function run() {
+module.exports = async function run() {
   const {
     username,
     password,
@@ -60,7 +62,7 @@ export default async function run() {
   )
   .help()
   .argv;
-  
+
   console.log('Verifying mongorestore installation...');
   try {
     await verifyMongorestore();
@@ -90,16 +92,45 @@ export default async function run() {
 
   console.log();
 
-  console.log('Creating a new app at Back4App...');
+  console.log('Listing apps...');
+  let apps = null;
   let app = null;
   try {
-    app = await createApp(cookie, appName);
+    apps = await listApps(cookie);
+    if (apps.length > 0) {
+      const appFound = apps.find(a => a.appName === appName)
+      if (appFound) {
+        const answers = await inquirer.prompt([{
+          type: 'list',
+          name: 'override',
+          message: `We found an app named "${appName}"! Would you like to override the data?`,
+          choices: ['YES! Delete this app data and import it again', `NO! Create a new app with the same name: ${appName}`]
+        }])
+        const override = answers.override.indexOf('YES') === 0
+        if (override) {
+          app = await getApp(cookie, appFound.id)
+        }
+      }
+    }
   } catch (e) {
-    console.log('Failed to create a new app at Back4App');
+    console.log('Failed to check your apps on Back4App');
     if (e) {
       console.log(e.message || e);
     }
     return;
+  }
+
+  if (!app) {
+    console.log('Creating a new app at Back4App...');
+    try {
+      app = await createApp(cookie, appName);
+    } catch (e) {
+      console.log('Failed to create a new app at Back4App');
+      if (e) {
+        console.log(e.message || e);
+      }
+      return;
+    }
   }
 
   console.log();
@@ -225,7 +256,7 @@ function logIn(username, password) {
         }
       },
       (error, response, body) => {
-        if (error) {          
+        if (error) {
           reject(error);
         } else if (response.statusCode !== 200) {
           reject(body);
@@ -250,6 +281,54 @@ function createApp(cookie, appName) {
         body: {
           appName
         }
+      },
+      (error, response, body) => {
+        if (error) {
+          reject(error);
+        } else if (response.statusCode !== 200) {
+          reject(body);
+        } else {
+          resolve(body);
+        }
+      }
+    );
+  });
+}
+
+function listApps(cookie) {
+  return new Promise((resolve, reject) => {
+    request(
+      {
+        url: 'https://dashboard.back4app.com/listApps',
+        method: 'GET',
+        headers: {
+          cookie
+        },
+        json: true
+      },
+      (error, response, body) => {
+        if (error) {
+          reject(error);
+        } else if (response.statusCode !== 200) {
+          reject(body);
+        } else {
+          resolve(body);
+        }
+      }
+    );
+  });
+}
+
+function getApp(cookie, id) {
+  return new Promise((resolve, reject) => {
+    request(
+      {
+        url: `https://dashboard.back4app.com/parse-app/${id}`,
+        method: 'GET',
+        headers: {
+          cookie
+        },
+        json: true
       },
       (error, response, body) => {
         if (error) {
@@ -304,12 +383,18 @@ function verifyApp(app) {
 }
 
 function restoreDB(databaseURL, dumpPath) {
+
+  // console.log(`Restoring your data on ${databaseURL}`)
+
+  const platform = os.platform()
+  const binay = path.join(__dirname, '../mongodb', platform, 'mongorestore')
+
   databaseURL = databaseURL.split('://')[1];
   const password = databaseURL.split(':')[1].split('@')[0];
   const db = databaseURL.split('/')[1];
   return new Promise((resolve, reject) => {
     const mongorestore = spawn(
-      'mongorestore',
+      binay,
       [
         '--username', 'admin',
         '--password', password,
@@ -325,9 +410,9 @@ function restoreDB(databaseURL, dumpPath) {
     );
 
     mongorestore.stdout.on('data', data => console.log(data.toString()));
-    
+
     mongorestore.stderr.on('data', data => console.error(data.toString()));
-    
+
     mongorestore.on('close', code => {
       if (code === 0) {
         resolve();
