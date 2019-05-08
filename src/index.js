@@ -387,7 +387,7 @@ function restoreDB(databaseURL, dumpPath) {
   // console.log(`Restoring your data on ${databaseURL}`)
 
   const platform = os.platform()
-  const binay = path.join(__dirname, '../mongorestore', platform, 'mongorestore')
+  const binay = path.join(__dirname, '../mongodb', platform, 'mongorestore')
 
   databaseURL = databaseURL.split('://')[1];
   const password = databaseURL.split(':')[1].split('@')[0];
