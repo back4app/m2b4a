@@ -38,6 +38,7 @@ Go to https://www.back4app.com and sign up.
 migrate-to-back4app --username <username> --password <password> --app-name <app-name> --dump-path <dump-path> [--files-path <files-path>]
 ```
 Option | Description | Required
+--- | --- | ---
 username | Your Back4App username (e-mail) | Yes
 password | Your Back4App password | Yes
 app-name | Your app name | Yes
