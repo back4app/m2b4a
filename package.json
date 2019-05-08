@@ -19,13 +19,10 @@
   },
   "homepage": "https://www.back4app.com",
   "engines": {
-    "node": ">=10.10"
+    "node": ">=8"
   },
   "scripts": {
-    "build": "babel src -d lib",
-    "test": "npm run build && m2b4a --help",
-    "prod": "BABEL_ENV=production npm run build",
-    "prepublishOnly": "npm run prod"
+    "test": "m2b4a --help"
   },
   "files": [
     "bin",
@@ -38,14 +35,8 @@
     "m2b4a": "./bin/m2b4a.js",
     "migrate-to-back4app": "./bin/m2b4a.js"
   },
-  "devDependencies": {
-    "@babel/cli": "^7.4.4",
-    "@babel/core": "^7.4.4",
-    "@babel/preset-env": "^7.4.4",
-    "babel-preset-minify": "^0.5.0"
-  },
+  "devDependencies": {},
   "dependencies": {
-    "@babel/polyfill": "^7.4.4",
     "fs-extra": "^7.0.1",
     "inquirer": "^6.3.1",
     "request": "^2.88.0",
