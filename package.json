@@ -30,7 +30,9 @@
   "files": [
     "bin",
     "lib",
-    "package.json"
+    "package.json",
+    "LICENSE",
+    "README.md"
   ],
   "bin": {
     "m2b4a": "./bin/m2b4a.js",
