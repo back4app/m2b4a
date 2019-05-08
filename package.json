@@ -27,6 +27,7 @@
   "files": [
     "bin",
     "lib",
+    "src",
     "package.json",
     "LICENSE",
     "README.md"
