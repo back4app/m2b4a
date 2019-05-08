@@ -5,6 +5,8 @@ const request = require('request');
 const yargs = require('yargs');
 const os = require('os');
 const inquirer = require('inquirer');
+const platform = os.platform()
+const binay = path.join(__dirname, '../mongodb', platform, 'mongorestore')
 
 module.exports = async function run() {
   const {
@@ -231,7 +233,7 @@ module.exports = async function run() {
 function verifyMongorestore() {
   return new Promise((resolve, reject) => {
     exec(
-      'mongorestore --version',
+      `${binay} --version`,
       error => {
         if (error) {
           reject(error);
@@ -385,9 +387,6 @@ function verifyApp(app) {
 function restoreDB(databaseURL, dumpPath) {
 
   // console.log(`Restoring your data on ${databaseURL}`)
-
-  const platform = os.platform()
-  const binay = path.join(__dirname, '../mongodb', platform, 'mongorestore')
 
   databaseURL = databaseURL.split('://')[1];
   const password = databaseURL.split(':')[1].split('@')[0];
