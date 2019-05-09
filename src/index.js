@@ -225,6 +225,7 @@ module.exports = async function run() {
   console.log(`REST Key: ${app.restKey}`);
   console.log(`.NET Key: ${app.dotnetKey}`);
   console.log(`Webhook Key: ${app.webhookKey}`);
+  console.log(`MongodbURI: ${app.databaseURL}`);
   console.log(`You can always have access to these credentials at: https://parse-dashboard.back4app.com/apps/${app.id}/settings/keys`);
   console.log();
   console.log('For additional information about the next steps, please check: https://www.npmjs.com/package/@back4app/m2b4a');
