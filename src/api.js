@@ -88,13 +88,13 @@ function restoreDB (databaseURL, dumpPath, drop = true) {
 
     mongorestoreCmd.stdout.on('data', data => console.log(data.toString().grey))
 
-    mongorestoreCmd.stderr.on('data', data => console.error(data.toString().red))
+    mongorestoreCmd.stderr.on('data', data => console.log(data.toString().grey))
 
     mongorestoreCmd.on('close', code => {
       if (code === 0) {
         resolve()
       } else {
-        reject(`Mongorestore exited with code: ${code}`.red.bold)
+        reject(`Mongorestore exited with code: ${code}`)
       }
     })
   })
