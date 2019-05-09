@@ -14,9 +14,9 @@ check(
       require('../src')().then(() => {
         process.exit(0)
       }).catch(err => {
-        console.log('\n\nOoops... Something got wrong!\nPlease open a ticket at: https://www.back4app.com\n\n'.red.bold)
+        console.log('\n\nOoops... Something got wrong!\nIf you have this error again open a ticket at: https://www.back4app.com\n\n'.red.bold)
         console.error(err.message || err)
-        console.error(err.stack)
+        console.error(err.stack || '')
         process.exit(1)
       })
       return
