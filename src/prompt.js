@@ -1,5 +1,4 @@
 const inquirer = require('inquirer')
-inquirer.registerPrompt('fuzzypath', require('inquirer-fuzzy-path'))
 
 const {listApps, createApp, signUp, logIn, getApp, verifyApp, restoreDB, uploadFiles, restartApp, verifyMongorestore, saveCookie, readCookie} = require('./api')
 
@@ -86,11 +85,10 @@ module.exports = async () => {
   await verifyApp(app)
 
   const {dumpPath, hasFiles} = await inquirer.prompt([{
-    type: 'fuzzypath',
+    type: 'input',
     name: 'dumpPath',
-    excludePath: path => path.indexOf('node_modules') !== -1,
-    itemType: 'directory',
-    message: `Where are the dumped mongodb files (you can search or just copy and paste it here)?`
+    validation: v => !!v,
+    message: `Where are the dumped mongodb files? Paste the directory path here:`
   }, {
     type: 'confirm',
     name: 'hasFiles',
@@ -99,11 +97,10 @@ module.exports = async () => {
 
   if (hasFiles) {
     let {filesPath} = await inquirer.prompt([{
-      type: 'fuzzypath',
+      type: 'input',
       name: 'filesPath',
-      excludePath: path => path.indexOf('node_modules') !== -1,
-      itemType: 'directory',
-      message: `Where are the files (you can search the path or just copy and paste it here)?`
+      validation: v => !!v,
+      message: `Where are the files to upload? Paste the directory path here:`
     }])
     await uploadFiles(app, filesPath)
   }
