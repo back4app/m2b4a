@@ -151,6 +151,13 @@ function readCookie () {
   }
 }
 
+function deleteCookie () {
+  try {
+    fs.unlinkSync(cookiePath)
+  } catch (e) {
+  }
+}
+
 module.exports = {
   verifyMongorestore,
   logIn,
@@ -163,5 +170,6 @@ module.exports = {
   restoreDB,
   uploadFiles,
   saveCookie,
-  readCookie
+  readCookie,
+  deleteCookie
 }

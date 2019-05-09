@@ -1,6 +1,6 @@
 const inquirer = require('inquirer')
 
-const {listApps, createApp, signUp, logIn, getApp, verifyApp, restoreDB, uploadFiles, restartApp, verifyMongorestore, saveCookie, readCookie} = require('./api')
+const {listApps, createApp, signUp, logIn, getApp, verifyApp, restoreDB, uploadFiles, restartApp, verifyMongorestore, saveCookie, readCookie, deleteCookie} = require('./api')
 
 module.exports = async () => {
   let app = null
@@ -19,7 +19,7 @@ module.exports = async () => {
   }
 
   if (!useLoggedUser) {
-    const {hasAccount, username, password} = await inquirer.prompt([{
+    const {hasAccount, username, password, saveSession} = await inquirer.prompt([{
       type: 'list',
       name: 'hasAccount',
       message: `Do you have a Back4App account?`,
@@ -34,11 +34,16 @@ module.exports = async () => {
       name: 'password',
       message: `What is your password?`,
       validate: v => !!v
+    }, {
+      type: 'confirm',
+      name: 'saveSession',
+      message: `Do you want to save your session?`,
+      validate: v => !!v
     }])
 
     login = hasAccount.indexOf('YES') === 0
     cookie = await (login ? logIn(username, password) : signUp(username, password))
-    saveCookie({cookie, username})
+    saveSession ? saveCookie({cookie, username}) : deleteCookie()
   }
 
   const apps = login && await listApps(cookie)
