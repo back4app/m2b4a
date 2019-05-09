@@ -89,7 +89,7 @@ module.exports = async () => {
     type: 'fuzzypath',
     name: 'dumpPath',
     itemType: 'directory',
-    message: `Where are the dumped mongodb files?`
+    message: `Where are the dumped mongodb files (you can search or just copy and paste it here)?`
   }, {
     type: 'confirm',
     name: 'hasFiles',
@@ -101,7 +101,7 @@ module.exports = async () => {
       type: 'fuzzypath',
       name: 'filesPath',
       itemType: 'directory',
-      message: `Where are the files?`
+      message: `Where are the files (you can search the path or just copy and paste it here)?`
     }])
     await uploadFiles(app, filesPath)
   }
