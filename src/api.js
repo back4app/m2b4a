@@ -68,6 +68,7 @@ async function verifyApp (app, attempt = 5) {
 }
 
 function restoreDB (databaseURL, dumpPath, drop = true) {
+  if (dumpPath.startsWith('~')) dumpPath = dumpPath.replace('~', os.homedir())
   console.log('Restoring your database...'.gray)
   databaseURL = databaseURL.split('://')[1]
   const password = databaseURL.split(':')[1].split('@')[0]
@@ -101,6 +102,7 @@ function restoreDB (databaseURL, dumpPath, drop = true) {
 }
 
 async function uploadFiles (app, filesPath) {
+  if (filesPath.startsWith('~')) filesPath = filesPath.replace('~', os.homedir())
   console.log('Uploading your files...'.gray)
   const fileNames = fs.readdirSync(filesPath)
   for (let i = 0; i < fileNames.length; i++) {
