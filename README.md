@@ -1,13 +1,9 @@
 # m2b4a - migrate-to-back4app
 Command-line-interface (CLI) for migrating an existing app to Back4App: https://www.npmjs.com/package/@back4app/m2b4a
 
-## 1 - Requirements
+## 1 - Install Node.js (>= 8) and npm
 
-### 1.1 - Install Node.js (>= 10.10) and npm
 If you don't have Node.js or npm installed in your machine, please take a look in this link: https://www.npmjs.com/get-npm
-
-### 1.2 - Install MongoDB
-If you don't have MongoDB installed in your machine, please take a look in this link: https://docs.mongodb.com/manual/installation/
 
 ## 2 - Install @back4app/m2b4a
 ```
