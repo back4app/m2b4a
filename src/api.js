@@ -32,9 +32,9 @@ async function signUp (username, password) {
   return _cookie
 }
 
-async function createApp (appName, cookie = _cookie, description = 'Created using m2b4a') {
+async function createApp (appName, cookie = _cookie, appDescription = 'Created using m2b4a') {
   console.log('Creating a new app...'.gray)
-  const response = await axios.post('https://dashboard.back4app.com/create-parse-app', {appName, description}, {headers: {cookie}})
+  const response = await axios.post('https://dashboard.back4app.com/create-parse-app', {appName, appDescription}, {headers: {cookie}})
   return response.data
 }
 
