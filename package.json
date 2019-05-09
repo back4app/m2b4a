@@ -1,6 +1,10 @@
 {
   "name": "@back4app/m2b4a",
   "version": "1.0.5",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/back4app/m2b4a.git"
+  },
   "publishConfig": {
     "access": "public"
   },
@@ -21,6 +25,11 @@
   "engines": {
     "node": ">=8"
   },
+  "os": [
+    "darwin",
+    "linux",
+    "win32"
+  ],
   "scripts": {
     "test": "m2b4a --help"
   },
@@ -33,6 +42,7 @@
     "LICENSE",
     "README.md"
   ],
+  "main": "src/index.js",
   "bin": {
     "m2b4a": "./bin/m2b4a.js",
     "migrate-to-back4app": "./bin/m2b4a.js"
