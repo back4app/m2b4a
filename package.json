@@ -39,6 +39,7 @@
     "src",
     "mongodb",
     "package.json",
+    "package-lock.json",
     "LICENSE",
     "README.md"
   ],

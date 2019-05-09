@@ -86,9 +86,9 @@ function restoreDB (databaseURL, dumpPath, drop = true) {
   return new Promise((resolve, reject) => {
     const mongorestoreCmd = spawn(mongorestore, options)
 
-    mongorestoreCmd.stdout.on('data', data => console.log(data.toString()))
+    mongorestoreCmd.stdout.on('data', data => console.log(data.toString().grey))
 
-    mongorestoreCmd.stderr.on('data', data => console.error(data.toString()))
+    mongorestoreCmd.stderr.on('data', data => console.error(data.toString().red))
 
     mongorestoreCmd.on('close', code => {
       if (code === 0) {

@@ -45,7 +45,6 @@ module.exports = async () => {
   const apps = login && await listApps(cookie)
 
   if (apps && apps.length > 0) {
-    // console.log(JSON.stringify(apps, null, 2))
     const {override} = await inquirer.prompt([{
       type: 'list',
       name: 'override',
