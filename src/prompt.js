@@ -88,7 +88,6 @@ module.exports = async () => {
   const {dumpPath, hasFiles} = await inquirer.prompt([{
     type: 'fuzzypath',
     name: 'dumpPath',
-    excludePath: path => path.indexOf('.') !== 0,
     itemType: 'directory',
     message: `Where are the dumped mongodb files (you can search or just copy and paste it here)?`
   }, {
@@ -101,7 +100,6 @@ module.exports = async () => {
     let {filesPath} = await inquirer.prompt([{
       type: 'fuzzypath',
       name: 'filesPath',
-      excludePath: path => path.indexOf('.') !== 0,
       itemType: 'directory',
       message: `Where are the files (you can search the path or just copy and paste it here)?`
     }])
