@@ -1,5 +1,6 @@
 const inquirer = require('inquirer')
 const fs = require('fs-extra')
+const path = require('path')
 
 const {listApps, createApp, signUp, logIn, getApp, verifyApp, restoreDB, uploadFiles, restartApp, verifyMongoRestore, saveCookie, readCookie, deleteCookie} = require('./api')
 const {PathPrompt} = require('inquirer-path')
@@ -134,7 +135,7 @@ module.exports = async () => {
       name: 'filesPath',
       itemType: 'directory',
       directoryOnly: true,
-      default: process.cwd(),
+      default: `${process.cwd() + path.sep}/files`,
       validate: answer => pathExists(answer) ? true : 'The path does not exist',
       message: `$ `
     }])
