@@ -135,7 +135,7 @@ module.exports = async () => {
       name: 'filesPath',
       itemType: 'directory',
       directoryOnly: true,
-      default: `${process.cwd() + path.sep}/files`,
+      default: pathExists(`${process.cwd() + path.sep}/files`) ? `${process.cwd() + path.sep}/files` : process.cwd(),
       validate: answer => pathExists(answer) ? true : 'The path does not exist',
       message: `$ `
     }])
