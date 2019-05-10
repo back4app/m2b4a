@@ -17,12 +17,12 @@ PathAutocomplete.prototype.getMatches = function () {
 
 inquirer.registerPrompt('path', PathPrompt)
 
-function pathExists(path) {
+function pathExists (path) {
   try {
-    fs.accessSync(path, fs.R_OK);
-    return true;
+    fs.accessSync(path, fs.R_OK)
+    return true
   } catch (error) {
-    return false;
+    return false
   }
 }
 
@@ -66,13 +66,23 @@ module.exports = async () => {
     }])
 
     login = hasAccount.indexOf('YES') === 0
-    cookie = await (login ? logIn(username, password) : signUp(username, password))
+    if (login) {
+      cookie = await logIn(username, password)
+    } else {
+      await signUp(username, password)
+      cookie = await logIn(username, password)
+    }
     saveSession ? saveCookie({cookie, username}) : deleteCookie()
   }
 
   const apps = login && await listApps(cookie)
 
-  if (apps && apps.length > 0) {
+  // Error on logged user
+  if (apps && apps.constructor === String) {
+    console.log('Error getting your session. Try again...')
+  }
+
+  if (apps && apps.length > 0 && apps.constructor === Array) {
     const {override} = await inquirer.prompt([{
       type: 'list',
       name: 'override',

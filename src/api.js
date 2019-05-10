@@ -66,7 +66,7 @@ async function verifyApp (app, attempt = 5) {
     })
   } catch (err) {
     if (attempt <= 0) return Promise.reject(err)
-    await sleep(3000)
+    await sleep(10000)
     attempt--
     return verifyApp(app, attempt)
   }
