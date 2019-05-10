@@ -1,6 +1,30 @@
 const inquirer = require('inquirer')
+const fs = require('fs-extra')
 
 const {listApps, createApp, signUp, logIn, getApp, verifyApp, restoreDB, uploadFiles, restartApp, verifyMongoRestore, saveCookie, readCookie, deleteCookie} = require('./api')
+inquirer.registerPrompt('fuzzypath', require('inquirer-fuzzy-path'))
+const {PathPrompt} = require('inquirer-path')
+const PathAutocomplete = require('inquirer-path/lib/PathAutocomplete').default
+
+const isNotUnixHiddenPath = function (path) {
+  return !(/(^|\/)\.[^\/\.]/g).test(path)
+}
+
+PathAutocomplete.prototype.getMatches = function () {
+  this.matches = this.matches && this.matches.filter(v => isNotUnixHiddenPath(v.getAbsolutePath()))
+  return this.matches
+}
+
+inquirer.registerPrompt('path', PathPrompt)
+
+function pathExists(path) {
+  try {
+    fs.accessSync(path, fs.R_OK);
+    return true;
+  } catch (error) {
+    return false;
+  }
+}
 
 module.exports = async () => {
   let app = null
@@ -90,10 +114,13 @@ module.exports = async () => {
   await verifyApp(app)
 
   const {dumpPath, hasFiles} = await inquirer.prompt([{
-    type: 'input',
+    type: 'path',
     name: 'dumpPath',
-    validation: v => !!v,
-    message: `Where are the dumped mongodb files? Paste the directory path here:`
+    itemType: 'directory',
+    default: process.cwd(),
+    validate: answer => pathExists(answer) ? true : 'The path does not exist',
+    directoryOnly: true,
+    message: `Where are the dumped mongodb files? Search or paste the directory path here ('tab' and 'enter' keys can help you to search it). \n$ `
   }, {
     type: 'confirm',
     name: 'hasFiles',
@@ -102,10 +129,13 @@ module.exports = async () => {
 
   if (hasFiles) {
     let {filesPath} = await inquirer.prompt([{
-      type: 'input',
+      type: 'path',
       name: 'filesPath',
-      validation: v => !!v,
-      message: `Where are the files to upload? Paste the directory path here:`
+      itemType: 'directory',
+      directoryOnly: true,
+      default: process.cwd(),
+      validate: answer => pathExists(answer) ? true : 'The path does not exist',
+      message: `Where are the files to upload? Search or paste the directory path here ('tab' and 'enter' keys can help you to search it). \n$ `
     }])
     await uploadFiles(app, filesPath)
   }
