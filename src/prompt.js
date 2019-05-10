@@ -80,6 +80,7 @@ module.exports = async () => {
   // Error on logged user
   if (apps && apps.constructor === String) {
     console.log('Error getting your session. Try again...')
+    deleteCookie()
   }
 
   if (apps && apps.length > 0 && apps.constructor === Array) {
