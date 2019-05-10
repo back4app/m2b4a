@@ -14,7 +14,7 @@ const platform = os.platform()
 const cookiePath = path.join(homedir, '.b4acookie')
 const mongorestore = path.join(__dirname, '../mongodb', platform, 'mongorestore')
 
-function verifyMongorestore () {
+function verifyMongoRestore () {
   return execAsync(`${mongorestore} --version`)
 }
 
@@ -166,7 +166,7 @@ function deleteCookie () {
 }
 
 module.exports = {
-  verifyMongorestore,
+  verifyMongoRestore,
   logIn,
   signUp,
   createApp,

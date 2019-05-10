@@ -1,6 +1,6 @@
 const inquirer = require('inquirer')
 
-const {listApps, createApp, signUp, logIn, getApp, verifyApp, restoreDB, uploadFiles, restartApp, verifyMongorestore, saveCookie, readCookie, deleteCookie} = require('./api')
+const {listApps, createApp, signUp, logIn, getApp, verifyApp, restoreDB, uploadFiles, restartApp, verifyMongoRestore, saveCookie, readCookie, deleteCookie} = require('./api')
 
 module.exports = async () => {
   let app = null
@@ -110,7 +110,7 @@ module.exports = async () => {
     await uploadFiles(app, filesPath)
   }
 
-  await verifyMongorestore()
+  await verifyMongoRestore()
 
   await restoreDB(app.databaseURL, dumpPath, drop)
 
