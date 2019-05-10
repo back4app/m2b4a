@@ -112,6 +112,7 @@ module.exports = async () => {
 
   await verifyApp(app)
 
+  console.log('? '.green + 'Where are the dumped mongodb files? Search or paste the directory path here (\'tab\' and \'enter\' keys can help you to search it).'.white.bold)
   const {dumpPath, hasFiles} = await inquirer.prompt([{
     type: 'path',
     name: 'dumpPath',
@@ -119,7 +120,7 @@ module.exports = async () => {
     default: process.cwd(),
     validate: answer => pathExists(answer) ? true : 'The path does not exist',
     directoryOnly: true,
-    message: `Where are the dumped mongodb files? Search or paste the directory path here ('tab' and 'enter' keys can help you to search it). \n$ `
+    message: `$ `
   }, {
     type: 'confirm',
     name: 'hasFiles',
@@ -127,6 +128,7 @@ module.exports = async () => {
   }])
 
   if (hasFiles) {
+    console.log('? '.green + 'Where are the files to upload? Search or paste the directory path here (\'tab\' and \'enter\' keys can help you to search it).'.white.bold)
     let {filesPath} = await inquirer.prompt([{
       type: 'path',
       name: 'filesPath',
@@ -134,7 +136,7 @@ module.exports = async () => {
       directoryOnly: true,
       default: process.cwd(),
       validate: answer => pathExists(answer) ? true : 'The path does not exist',
-      message: `Where are the files to upload? Search or paste the directory path here ('tab' and 'enter' keys can help you to search it). \n$ `
+      message: `$ `
     }])
     await uploadFiles(app, filesPath)
   }
