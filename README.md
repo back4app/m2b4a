@@ -51,7 +51,7 @@ That's the final step and once you have concluded it, your app is safe at Back4A
 1. TIP: Use the command 'b4a new' to download the directory structure to paste your cloud code files and 'b4a deploy' to upload them to your app.
 1. Back4App uses 2 main folders: "public/" to public files, like htmls, css, etc. and "cloud/" to private cloud code.
 1. Inside "cloud/" Back4App import 2 files. One named "app.js" for your custom api (app.get('/my-custom-api') for ex.) and "main.js" for Parse.Cloud functions and jobs  
-1. __VERY IMPORTANT!__ "app" (the expressjs instance) and "Parse" variables are global. Don't install them on your package.json or require them in your cloud code (_don't use require('express') or require('parse/node'), just use app and Parse variables_).
+1. __VERY IMPORTANT!__ "app" (the express.js instance) and "Parse" variables are global. Don't install them on your package.json or require them in your cloud code (_don't use require('express') or require('parse/node'), just use app and Parse variables_).
 
 ## 9 - Getting help
 If you need any assistance, please open a ticket at https://www.back4app.com or schedule an appointment with our engineering team using this link: https://calendly.com/back4app/
