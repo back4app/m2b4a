@@ -2,7 +2,6 @@ const inquirer = require('inquirer')
 const fs = require('fs-extra')
 
 const {listApps, createApp, signUp, logIn, getApp, verifyApp, restoreDB, uploadFiles, restartApp, verifyMongoRestore, saveCookie, readCookie, deleteCookie} = require('./api')
-inquirer.registerPrompt('fuzzypath', require('inquirer-fuzzy-path'))
 const {PathPrompt} = require('inquirer-path')
 const PathAutocomplete = require('inquirer-path/lib/PathAutocomplete').default
 
