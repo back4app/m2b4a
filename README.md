@@ -23,7 +23,7 @@ This is an optional step only for users migrating from Buddy.
 ```
 mkdir files
 cd files
-wget -i ../fileList.txt                   # <-- Back4App recomendation
+wget -i ../fileList.txt                   # <-- Back4App recommendation
 
 # or using curl
 xargs -n 1 curl -O < ../fileList.txt      # <-- Buddy default
