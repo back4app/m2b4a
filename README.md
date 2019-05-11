@@ -23,8 +23,12 @@ This is an optional step only for users migrating from Buddy.
 ```
 mkdir files
 cd files
-xargs -n 1 curl -O < ../fileList.txt
+wget -i ../fileList.txt                   # <-- Back4App recomendation
+
+# or using curl
+xargs -n 1 curl -O < ../fileList.txt      # <-- Buddy default
 ```
+TIP: If a file name has a space character you can have problems using curl. Try to use wget command. 
 
 ## 4 - Execute the migrate command
 ```
