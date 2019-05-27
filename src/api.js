@@ -133,7 +133,7 @@ async function uploadFiles (app, filesPath) {
       if (attempt <= 0) return Promise.reject(err)
       await sleep(1000)
       attempt--
-      await uploadFile(filename, data, attempt)
+      await uploadFile(filename, stream, attempt)
     }
   }
 }
