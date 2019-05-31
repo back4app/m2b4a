@@ -79,8 +79,9 @@ module.exports = async () => {
 
   // Error on logged user
   if (apps && apps.constructor === String) {
-    console.log('Error getting your session. Try again...')
+    console.log('Your session is not valid. Try again with a new login session...')
     deleteCookie()
+    process.exit(1)
   }
 
   if (apps && apps.length > 0 && apps.constructor === Array) {
