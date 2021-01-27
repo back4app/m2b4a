@@ -77,11 +77,12 @@ function restoreDB (databaseURL, dumpPath, drop = true) {
   console.log('Restoring your database...'.gray)
   databaseURL = databaseURL.split('://')[1]
   const password = databaseURL.split(':')[1].split('@')[0]
+  const host = databaseURL.split('@')[1].split(':')[0]
   const db = databaseURL.split('/')[1]
   const options = [
     '--username', 'admin',
     '--password', password,
-    '--host', 'mongodb.back4app.com',
+    '--host', host,
     '--port', '27017',
     '--db', db,
     '--authenticationDatabase', db,
