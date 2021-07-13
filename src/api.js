@@ -1,26 +1,40 @@
-const {exec, spawn} = require('child_process')
+const { exec, spawn } = require('child_process')
 const path = require('path')
 const fs = require('fs-extra')
 const os = require('os')
 const axios = require('axios')
-const {promisify} = require('util')
+const { promisify } = require('util')
 const execAsync = promisify(exec)
 const sleep = require('sleep-promise')
 const homedir = os.homedir()
 const FormData = require('form-data')
 
-let _cookie = null
-const platform = os.platform()
-const cookiePath = path.join(homedir, '.b4acookie')
-const mongorestore = path.join(__dirname, '../mongodb', platform, 'mongorestore')
+const util = require('util');
+const execTest = util.promisify(require('child_process').exec);
 
-function verifyMongoRestore () {
+let _cookie = null
+const process = require('child_process');
+
+process.exec('uname -p', function (err, stdout, stderr) {
+  if (err) {
+    console.log(stderr);
+  } else {
+    let platform = stdout.replace(/\n|\r/g, "")
+    mongorestore = path.join(__dirname, '../mongodb', `${platform}`, 'mongorestore')
+  }
+});
+
+const cookiePath = path.join(homedir, '.b4acookie')
+let mongorestore = null
+//console.log('olhaa mongorestore ', mongorestore)
+
+function verifyMongoRestore() {
   return execAsync(`${mongorestore} --version`)
 }
 
-async function logIn (username, password) {
+async function logIn(username, password) {
   console.log('Logging on Back4App...'.gray)
-  const response = await axios.post('https://dashboard.back4app.com/login', {username, password}).catch(err => {
+  const response = await axios.post('https://dashboard.back4app.com/login', { username, password }).catch(err => {
     if (err.response.status === 401) {
       return Promise.reject(`Wrong username or password. Wait 1 minute and try again`)
     }
@@ -30,32 +44,32 @@ async function logIn (username, password) {
   return _cookie
 }
 
-async function signUp (username, password) {
+async function signUp(username, password) {
   console.log('Signing up on Back4App...'.gray)
-  const response = await axios.post('https://dashboard.back4app.com/signup', {username, password})
+  const response = await axios.post('https://dashboard.back4app.com/signup', { username, password })
   _cookie = response.headers['set-cookie']
   return _cookie
 }
 
-async function createApp (appName, cookie = _cookie, appDescription = 'Created using m2b4a') {
+async function createApp(appName, cookie = _cookie, appDescription = 'Created using m2b4a') {
   console.log('Creating a new app...'.gray)
-  const response = await axios.post('https://dashboard.back4app.com/create-parse-app', {appName, appDescription}, {headers: {cookie}})
+  const response = await axios.post('https://dashboard.back4app.com/create-parse-app', { appName, appDescription }, { headers: { cookie } })
   return response.data
 }
 
-async function listApps (cookie = _cookie) {
+async function listApps(cookie = _cookie) {
   console.log('Listing your apps...'.gray)
-  const response = await axios.get('https://dashboard.back4app.com/listApps', {headers: {cookie}})
+  const response = await axios.get('https://dashboard.back4app.com/listApps', { headers: { cookie } })
   return response.data
 }
 
-async function getApp (id, cookie = _cookie) {
+async function getApp(id, cookie = _cookie) {
   console.log('Getting app details...'.gray)
-  const response = await axios.get(`https://dashboard.back4app.com/parse-app/${id}`, {headers: {cookie}})
+  const response = await axios.get(`https://dashboard.back4app.com/parse-app/${id}`, { headers: { cookie } })
   return response.data
 }
 
-async function verifyApp (app, attempt = 5) {
+async function verifyApp(app, attempt = 5) {
   try {
     console.log('Verifying your app...'.gray)
     await axios.get('https://parseapi.back4app.com/serverInfo', {
@@ -72,7 +86,7 @@ async function verifyApp (app, attempt = 5) {
   }
 }
 
-function restoreDB (databaseURL, dumpPath, drop = true) {
+function restoreDB(databaseURL, dumpPath, drop = true) {
   if (dumpPath.startsWith('~')) dumpPath = dumpPath.replace('~', os.homedir())
   console.log('Restoring your database...'.gray)
   databaseURL = databaseURL.split('://')[1]
@@ -87,6 +101,7 @@ function restoreDB (databaseURL, dumpPath, drop = true) {
     '--db', db,
     '--authenticationDatabase', db,
     '--noIndexRestore',
+    '--writeConcern', "{w:0}",
     dumpPath
   ]
   if (drop) options.push('--drop')
@@ -107,7 +122,7 @@ function restoreDB (databaseURL, dumpPath, drop = true) {
   })
 }
 
-async function uploadFiles (app, filesPath) {
+async function uploadFiles(app, filesPath) {
   if (filesPath.startsWith('~')) filesPath = filesPath.replace('~', os.homedir())
   console.log('Uploading your files...'.gray)
   const fileNames = fs.readdirSync(filesPath)
@@ -120,16 +135,16 @@ async function uploadFiles (app, filesPath) {
     }
   }
 
-  async function uploadFile (filename, stream, attempt = 5) {
+  async function uploadFile(filename, stream, attempt = 5) {
     console.log(`Uploading ${filename}...`.gray)
     let form = new FormData()
-    form.append('upload', stream, {filename})
+    form.append('upload', stream, { filename })
 
     const headers = form.getHeaders()
     headers['X-Parse-Application-Id'] = app.appId
     headers['X-Parse-Master-Key'] = app.masterKey
     try {
-      await axios.post('http://s3proxy.back4app.com/uploadFile', form, {headers})
+      await axios.post('http://s3proxy.back4app.com/uploadFile', form, { headers })
     } catch (err) {
       if (attempt <= 0) return Promise.reject(err)
       await sleep(1000)
@@ -139,17 +154,17 @@ async function uploadFiles (app, filesPath) {
   }
 }
 
-async function restartApp (app, cookie = _cookie) {
+async function restartApp(app, cookie = _cookie) {
   console.log('Restarting your app...'.gray)
-  const response = await axios.post(`https://dashboard.back4app.com/parse-app/${app.id}/restart`, null, {headers: {cookie}})
+  const response = await axios.post(`https://dashboard.back4app.com/parse-app/${app.id}/restart`, null, { headers: { cookie } })
   return response.data
 }
 
-function saveCookie ({cookie = _cookie, username}) {
-  fs.writeFileSync(cookiePath, JSON.stringify({cookie, username}))
+function saveCookie({ cookie = _cookie, username }) {
+  fs.writeFileSync(cookiePath, JSON.stringify({ cookie, username }))
 }
 
-function readCookie () {
+function readCookie() {
   try {
     let storedCookie = JSON.parse(fs.readFileSync(cookiePath))
     if (storedCookie) _cookie = storedCookie.cookie
@@ -159,7 +174,7 @@ function readCookie () {
   }
 }
 
-function deleteCookie () {
+function deleteCookie() {
   try {
     fs.unlinkSync(cookiePath)
   } catch (e) {
