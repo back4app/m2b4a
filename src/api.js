@@ -107,7 +107,7 @@ function restoreDB(databaseURL, dumpPath, drop = true) {
     '--db', db,
     '--authenticationDatabase', db,
     '--noIndexRestore',
-    '--writeConcern', "{w:0}",
+    '--writeConcern', '{w:0}',
     dumpPath
   ]
   if (drop) options.push('--drop')
