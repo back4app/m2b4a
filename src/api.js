@@ -15,18 +15,24 @@ const execTest = util.promisify(require('child_process').exec);
 let _cookie = null
 const process = require('child_process');
 
-process.exec('uname -p', function (err, stdout, stderr) {
+
+process.exec('ver', function (err, stdout, stderr) {
   if (err) {
-    console.log(stderr);
-  } else {
-    let platform = stdout.replace(/\n|\r/g, "")
-    mongorestore = path.join(__dirname, '../mongodb', `${platform}`, 'mongorestore')
+    process.exec('uname -p', function (err, stdout, stderr) {
+      if (err) {
+        console.log('');
+      } else {
+        let platform = stdout.replace(/\n|\r/g, "")
+        mongorestore = path.join(__dirname, '../mongodb', `${platform}`, 'mongorestore')
+      }
+    })
+  } if (stdout = /soft/) {
+    mongorestore = path.join(__dirname, '../mongodb', 'win32', 'mongorestore')
   }
-});
+})
 
 const cookiePath = path.join(homedir, '.b4acookie')
 let mongorestore = null
-//console.log('olhaa mongorestore ', mongorestore)
 
 function verifyMongoRestore() {
   return execAsync(`${mongorestore} --version`)
