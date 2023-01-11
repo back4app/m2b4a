@@ -36,5 +36,6 @@ That's the final step and once you have concluded it, your app is safe at Back4A
 5. __VERY IMPORTANT!__ "app" (the express.js instance) and "Parse" variables are global. Don't install them on your package.json or require them in your cloud code (_don't use require('express') or require('parse/node'), just use app and Parse variables_).
 
 ## 8 - Getting help
-If you need any assistance, please open a ticket at https://www.back4app.com or schedule an appointment with our engineering team using this link: https://calendly.com/back4app/
+If you need any assistance, please open a ticket at https://www.back4app.com or schedule an appointment with our engineering team using this link: 
+https://calendly.com/alysson/one-o-one
 
