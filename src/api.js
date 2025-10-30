@@ -41,7 +41,7 @@ function verifyMongoRestore() {
 async function logIn(username, password) {
   console.log('Logging on Back4App...'.gray)
   const response = await axios.post('https://dashboard.back4app.com/login', { username, password }).catch(err => {
-    if (err.response.status === 401) {
+    if (err.response && err.response.status === 401) {
       return Promise.reject(`Wrong username or password. Wait 1 minute and try again`)
     }
     return Promise.reject(err)
